@@ -1,0 +1,16 @@
+[
+    {
+        "name":"farid",
+        "email":"farid@yahoo",
+        "address":"",
+        "username":"farid",
+        "pass":"123"
+    },
+    {
+        "name":"farid2",
+        "email":"farid2@gmail",
+        "address":"122223",
+        "username":"farid2",
+        "pass":"321"
+    }
+]
