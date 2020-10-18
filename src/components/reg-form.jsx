@@ -9,13 +9,19 @@ import {Clear,Check} from "@material-ui/icons";
  
 
 class RegForm extends Component {
-     
-
-    handleClear = () => {
-        // let{data} = this.state;
-        // data.username = ''
-        // data.password = ''
-        // this.setState({data})
+    
+    componentDidMount () {
+        let {data, dataFromJSON, handleClear} = this.props;
+        
+        for  (let i=0; i< dataFromJSON.length; i++) {
+            if (data.username === dataFromJSON[i].username)
+            {
+                data.name = dataFromJSON[i].name
+                data.address = dataFromJSON[i].address
+                data.email = dataFromJSON[i].email
+            }
+        }
+        handleClear(data)
     }
 
     handleChangeTextBox =({currentTarget: input}) => {        
@@ -25,10 +31,20 @@ class RegForm extends Component {
     }
 
     handleClick = param => {
-        let  { handleChangeScreen, dataFromJSON, data} = this.props;
- 
+        let  { handleChangeScreen, dataFromJSON, data, openDialogAndNotice} = this.props; 
         let doNotAdd = false;
         let addOrEdit = '';
+ 
+        if (data.username === '') {
+             openDialogAndNotice('Username cannot be empty')
+            return false;
+        }
+
+        if (data.password === '') {
+            openDialogAndNotice('Password cannot be empty')
+           return false;
+       }
+
         for (let i=0; i< dataFromJSON.length; i++) {
             if (dataFromJSON[i].username === data.username) {
                 doNotAdd = true;
@@ -37,6 +53,7 @@ class RegForm extends Component {
                 dataFromJSON[i].name = data.name
                 dataFromJSON[i].email = data.email
                 dataFromJSON[i].address = data.address
+                dataFromJSON[i].password = data.password
             }
         }
 
@@ -46,16 +63,29 @@ class RegForm extends Component {
             name: data.name,
             email: data.email,
             address: data.address,
-            username: data.username
+            username: data.username,
+            password: data.password
             })
         }
     
-        // console.log('hc2: ',param)     
+           
         handleChangeScreen(param, dataFromJSON,  addOrEdit)
     }
 
+    handleClearSubPage = () => {
+        let {handleClear, data} = this.props    
+
+        data.name = '';
+        data.email = '';
+        data.address = '';
+        data.username = '';
+        data.password = '';
+        handleClear(data)
+
+    }
+
     render() { 
-        let {data} = this.props;
+        let {data, handleClear} = this.props;
         return ( 
             <React.Fragment>
                 <div className="App">
@@ -111,7 +141,19 @@ class RegForm extends Component {
                 </tr>
 
                 <tr key={5}>
-                <td width="50%">picture: </td>
+                <td width="50%">Password: </td>
+                <td width="50%">
+                    <TextField   
+                    id ={'password'}                  
+                    placeholder="ASD890@..asd"
+                    value={data.password}
+                    onChange={this.handleChangeTextBox}
+                    />
+                </td>                     
+                </tr>
+
+                <tr key={6}>
+                <td width="50%">Picture: </td>
                 <td width="50%">
                     <input 
                     type="file" id="docpicker"
@@ -131,7 +173,7 @@ class RegForm extends Component {
                           }}
                          onClick={() => this.handleClick(1)}
                          >
-                             <Check style={{color: "#e0e0e0" }} / >
+                             <Check style={{color: "#e0e0e0" }} />
                              </Button>
                              </Tooltip>
                      </td>
@@ -142,10 +184,10 @@ class RegForm extends Component {
                          style={{ 
                             backgroundColor: "grey"
                           }}
-                         onClick={this.handleClear}
+                         onClick={this.handleClearSubPage}
 
                          >
-                             <Clear style={{ color: "#e0e0e0" }} / >
+                             <Clear style={{ color: "#e0e0e0" }} />
                              </Button>
                              </Tooltip>
                      </td>

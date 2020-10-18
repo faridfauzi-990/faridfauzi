@@ -12,11 +12,14 @@ import {Clear, Check, Person} from "@material-ui/icons";
 class Login extends Component {
      
 
-    handleClear = () => {
-        // let{data} = this.state;
-        // data.username = ''
-        // data.password = ''
-        // this.setState({data})
+    handleClearSubPage = () => {
+        let {handleClear, data} = this.props    
+
+        data.username = '';
+        data.password = '';
+        data.passwordDisp = '';
+        handleClear(data)
+
     }
 
     handleChangeTextBox =({currentTarget: input}) => {        
@@ -56,9 +59,9 @@ class Login extends Component {
                 <td width="50%">Password: </td>
                 <td width="50%">
                     <TextField                     
-                    id ={'password'}                  
+                    id ={'passwordDisp'}                  
                     placeholder="Fill in password"
-                    value={data.password}
+                    value={data.passwordDisp}
                     onChange={this.handleChangeTextBox}
                     />
                 </td>                     
@@ -93,7 +96,7 @@ class Login extends Component {
                             // textAlign: "right",
                             float: 'right'
                           }}
-                         onClick={() => this.handleClick(3 )}
+                         onClick={() => this.handleClick(3)}
                          >
                              <Person style={{margin:"12px",  color: "#e0e0e0" }} />
                              </Button>
@@ -111,7 +114,7 @@ class Login extends Component {
                             // marginBottom: "2px",
                             // textAlign: "right"
                           }}
-                         onClick={this.handleClear}
+                         onClick={this.handleClearSubPage}
 
                          >
                              <Clear style={{margin:"12px",  color: "#e0e0e0" }} />

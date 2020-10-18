@@ -9,11 +9,11 @@ import NavBar from "./navbar"
 
 class MainComponent extends Component {
             state = { data: {
-                                name:'',address:'',email:'',username:'farid',
+                                name:'',address:'',email:'',username:'farid',password:'',passwordDisp:'',
                                 prodId:'', prodName:'', prodDescr:'', prodImage:''
                             },
-                        openDialogError: false, openDialogErrorText: 'User does not exists',
-                        tab: 2, // 1 is login, 2 is product, 3 is registration
+                        openDialogError: false, openDialogErrorText: 'Username or Password does not exists',
+                        tab: 1, // 1 is login, 2 is product, 3 is registration
                         dataFromJSON: dataFromJSON,
                         currentPage: 1,
                         pageSize: 2,
@@ -51,7 +51,26 @@ class MainComponent extends Component {
 
                 for (let  i in data) {
                     if (input.id === i) {
-                        data[input.id] = input.value
+                        if (input.id === 'passwordDisp') {
+                            
+                            data['password'] += input.value.replaceAll('*', '');
+                            let tempVar = input.value;
+                            data[input.id] = tempVar.replace(/./g, '*');                             
+
+                            if (
+                                // data.password &&
+                                // input.value &&
+                                // data.password.length &&
+                                // input.value.length &&
+                                data.password.length !== input.value.length) {
+                                data.password = data.password.substr(0,input.value.length)
+                            }
+                            console.log('data.password: ',data.password)
+
+                        } else {
+                            data[input.id] = input.value
+                        }
+                        
                     }
                 } 
             
@@ -60,28 +79,27 @@ class MainComponent extends Component {
 
             handleChangeScreen = (param , paramJSON, addOrEdit ) => {
                 let {tab, dataFromJSON, data, openDialogErrorText, openDialogError} = this.state;
-                //  console.log('dataFromJSON: ',dataFromJSON)
+                 
                   
-                tab = param
-                // console.log('tab: ',tab)
+                tab = param 
 
-                if (param === 2) {
- 
+                if (param === 2) { 
 
                     let access = false;
                     for (let i=0; i< dataFromJSON.length; i++) {
-                        if (data.username === dataFromJSON[i].username) {
-                            access = true;
-                                } 
-                            }
-
-                    if (access) {
-                        // console.log('pass')
-                    } else {
-                        // console.log('fail')
-                        this.setState({openDialogError: true})
-                        return false;
+                        if (
+                            data.username === dataFromJSON[i].username &&
+                            data.password === dataFromJSON[i].password
+                            ) {
+                                access = true;
+                            } 
                     }
+
+                    if (access) {                         
+                        } else {                         
+                            this.setState({openDialogError: true, openDialogErrorText:'Username or password is not correct'})
+                            return false;
+                        }
                 }
  
                 
@@ -92,7 +110,7 @@ class MainComponent extends Component {
                 if (addOrEdit === 'edit') {
                     openDialogErrorText= 'Username '+data.username+' successfully edited'
                     openDialogError= true;
-                }
+                } 
 
                 this.setState({
                      tab
@@ -100,7 +118,7 @@ class MainComponent extends Component {
                     , openDialogErrorText
                     , openDialogError 
                 })
-                // console.log('dataFromJSON: ',paramJSON?paramJSON:dataFromJSON)
+                 
             }
 
             handlePageChange = tab => {                 
@@ -108,8 +126,18 @@ class MainComponent extends Component {
             }
 
             submitDialog = () => {
-                console.log('item has been submitted')
+                 
                 let {productItem, data} = this.state;
+
+                if (data.prodName === '') {
+                    this.setState({openDialogError:true,openDialogErrorText:'Product Name cannot be empty'})
+                    return false;
+                }
+
+                if (data.prodDescr === '') {
+                    this.setState({openDialogError:true,openDialogErrorText:'Product Descr cannot be empty'})
+                    return false;
+                }
 
                 productItem.push({
                     prodId: productItem.length + 1,
@@ -129,7 +157,7 @@ class MainComponent extends Component {
                     }
                     return 0;
                 });
-                console.log('productItem: ',productItem)
+                 
                 this.setState({productItem, openDialogError: false})
             }
 
@@ -142,43 +170,65 @@ class MainComponent extends Component {
                 })
             }
 
-    render() { 
-        let {   productItem,
+            handleClear = (data) => {
+                this.setState({data})
+            }
+
+            openDialogAndNotice = (param) => {
+
+                this.setState({ 
+                    openDialogError:true,
+                    openDialogErrorText: param
+                })
+            }
+
+            checkEmpty =(param)=>{
+                this.setState({openDialogError:true,openDialogErrorText:param})
+            }
+
+        render() { 
+        let {   productItem,                
                 currentPage,
                 pageSize,
                 data, tab, dataFromJSON, openDialogError, openDialogErrorText
             } = this.state;
+ 
+             
+
         return (
             <React.Fragment>
                 <NavBar
                 tab={tab}
-                handleChangeScreen={this.handleChangeScreen}
+                handleChangeScreen={this.handleChangeScreen}                 
                 />
                     {tab === 1 && ( 
                         <Login 
-                        data={data}
-                        {...this.props}
-                         handleChangeScreen={this.handleChangeScreen}
-                         handleChangeEditText={this.handleChangeEditText}
+                            data={data}
+                            {...this.props}
+                            handleChangeScreen={this.handleChangeScreen}
+                            handleChangeEditText={this.handleChangeEditText}
+                            handleClear={this.handleClear}
                          /> 
                     )}     
                     {tab === 2 && ( 
                         <Product {...this.props} 
-                        data={data}
-                        productItem={productItem}
-                        pageSize={pageSize}
-                        currentPage={currentPage}
-                        handlePageChange={(x) => this.handlePageChange(x)}
-                        handleOpenDialog={(y) => this.handleOpenDialog(y)}
+                            data={data}
+                            productItem={productItem}
+                            pageSize={pageSize}
+                            currentPage={currentPage}
+                            handlePageChange={(x) => this.handlePageChange(x)}
+                            handleOpenDialog={(y) => this.handleOpenDialog(y)}
                         /> 
                     )}  
                     {tab === 3 && ( 
                         <RegForm
-                        data={data}
-                        {...this.props}
-                        dataFromJSON={dataFromJSON}
-                         handleChangeScreen={this.handleChangeScreen}
-                         handleChangeEditText={this.handleChangeEditText}
+                            data={data}
+                            {...this.props}
+                            dataFromJSON={dataFromJSON}
+                            handleChangeScreen={this.handleChangeScreen}
+                            handleChangeEditText={this.handleChangeEditText}
+                            handleClear={this.handleClear}
+                            openDialogAndNotice={this.openDialogAndNotice}
                           /> 
                     )}
 
@@ -186,7 +236,7 @@ class MainComponent extends Component {
                     data={data}
                     openDialogFlag={openDialogError}
                     textToShow={openDialogErrorText} 
-                    buttonNo={this.closeDialogError}                 
+                    buttonNo={this.closeDialogError}                                      
                     buttonYes={this.submitDialog} 
                     handleChangeEditText={this.handleChangeEditText}  
                   />

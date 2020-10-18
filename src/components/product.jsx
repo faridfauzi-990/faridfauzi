@@ -30,7 +30,7 @@ class Product extends Component {
                         <header className="App-header">     
                         <Tooltip title='Add Regov item'>
                             <Button 
-                            style={{margin:5, padding: 5}}
+                            style={{backgroundColor:'grey', margin:5, padding: 5}}
                                 onClick={() => handleOpenDialog(true) }
                             >
                                 <Add/>

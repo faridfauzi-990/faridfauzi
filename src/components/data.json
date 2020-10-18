@@ -2,15 +2,22 @@
     {
         "name":"farid",
         "email":"farid@yahoo",
-        "address":"",
+        "address":"puchong ruvena villa, selangor",
         "username":"farid",
-        "pass":"123"
+        "password":"123"
     },
     {
-        "name":"farid2",
-        "email":"farid2@gmail",
-        "address":"122223",
-        "username":"farid2",
-        "pass":"321"
+        "name":"paul agada",
+        "email":"paul@regovtech.com",
+        "address":"B-7-3A, Block B West, Menara Pj8, 46050 Petaling Jaya, Selangor",
+        "username":"paul",
+        "password":"1234"
+    },
+    {
+        "name":"Danny Tan",
+        "email":"danny@regovtech.com",
+        "address":"Kuala Lumpur",
+        "username":"danny",
+        "password":"12345"
     }
 ]

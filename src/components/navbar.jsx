@@ -7,7 +7,7 @@ class NavBar extends Component {
      
     render() { 
         let {tab} = this.props
-        let {handleChangeScreen} =this.props;
+        let {handleChangeScreen } =this.props;
         return ( 
             <nav className="navbar-main">
                   {tab === 2 && (
